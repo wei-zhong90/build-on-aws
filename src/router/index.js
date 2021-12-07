@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { LoginCallback, navigationGuard } from "@okta/okta-vue";
 import Home from "../views/Home.vue";
 
 const routes = [
@@ -16,11 +17,17 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
+  {
+    path: "/login/callback",
+    component: LoginCallback,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+router.beforeEach(navigationGuard);
 
 export default router;

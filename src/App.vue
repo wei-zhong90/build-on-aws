@@ -1,23 +1,44 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr fFf">
     <q-header elevated class="glossy">
       <q-toolbar>
         <q-btn
           flat
           dense
           round
+          v-if="authState && authState.isAuthenticated"
           @click="leftDrawerOpen = !leftDrawerOpen"
           aria-label="Menu"
           icon="menu"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title>
+          <router-link to="/" style="text-decoration: none; color: inherit">
+            <q-avatar>
+              <img
+                src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
+              />
+            </q-avatar>
+            Builder's Creed
+          </router-link>
+        </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn
+          label="Login"
+          v-if="authState && !authState.isAuthenticated"
+          color="primary"
+          @click="login()"
+        ></q-btn>
+        <q-btn
+          label="Logout"
+          color="primary"
+          @click="logout()"
+          v-if="authState && authState.isAuthenticated"
+        ></q-btn>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2">
+    <q-drawer v-model="leftDrawerOpen" bordered class="bg-grey-2">
       <q-list>
         <q-item-label header>Essential Links</q-item-label>
         <q-item clickable tag="a" target="_blank" href="https://quasar.dev">
@@ -89,22 +110,36 @@
     </q-drawer>
 
     <q-page-container>
-      <HelloWorld />
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
 import { ref } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
   name: "LayoutDefault",
 
-  components: {
-    HelloWorld,
+  methods: {
+    login() {
+      this.$auth.signInWithRedirect({ originalUri: "/" });
+    },
+    async logout() {
+      const publicPath = this.$route.href.replace(
+        new RegExp(this.$route.fullPath + "$"),
+        ""
+      );
+      await this.$auth.signOut({
+        postLogoutRedirectUri: `${window.location.origin}${publicPath}`,
+      });
+    },
   },
-
+  mounted() {
+    if (this.authState && this.authState.isAuthenticated) {
+      console.log(this.$auth);
+    }
+  },
   setup() {
     return {
       leftDrawerOpen: ref(false),
