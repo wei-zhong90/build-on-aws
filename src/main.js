@@ -16,7 +16,7 @@ const oktaAuth = new OktaAuth({
   issuer: VUE_APP_issuer,
   clientId: VUE_APP_clientid,
   redirectUri: redirectUri,
-  scopes: ["openid", "profile", "email"],
+  scopes: ["openid", "profile", "email", "execute-api"],
   pkce: true,
 });
 

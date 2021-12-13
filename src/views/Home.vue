@@ -1,17 +1,19 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <q-page class="flex flex-center">
+      <blogCard msg="Welcome to Your Vue.js App" />
+    </q-page>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import blogCard from "@/components/blogCard.vue";
 
 export default {
   name: "Home",
   components: {
-    HelloWorld,
+    blogCard,
   },
 };
 </script>

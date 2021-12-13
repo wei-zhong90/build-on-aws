@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 <template>
   <q-layout view="hHh Lpr fFf">
     <q-header elevated class="glossy">
@@ -135,14 +136,10 @@ export default {
       });
     },
   },
-  mounted() {
-    if (this.authState && this.authState.isAuthenticated) {
-      console.log(this.$auth);
-    }
-  },
   setup() {
     return {
       leftDrawerOpen: ref(false),
+      token: ref(""),
     };
   },
 };
