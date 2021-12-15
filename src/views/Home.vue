@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="q-pa-md row items-start q-gutter-md">
+    <div class="q-pa-md flex flex-center q-gutter-md">
       <img
         alt="Quasar logo"
         src="../assets/logo.svg"

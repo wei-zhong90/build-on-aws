@@ -11,12 +11,21 @@
       />
     </div>
     <div class="q-pa-md row flex flex-center q-gutter-md">
+      <q-circular-progress
+        indeterminate
+        size="50px"
+        color="primary"
+        class="q-ma-md"
+        v-if="!content"
+      ></q-circular-progress>
       <q-pagination
+        v-else
         v-model="current"
         :max="total_page"
         :max-pages="total_page > 10 ? 10 : 0"
         boundary-numbers
         direction-links
+        @update:model-value="animateScroll"
       ></q-pagination>
     </div>
   </div>
@@ -40,6 +49,12 @@ export default {
       content: "",
     };
   },
+  methods: {
+    animateScroll() {
+      // console.log("activated in pager");
+      window.scrollTo(0, 0);
+    },
+  },
   mounted() {
     if (this.authState && this.authState.isAuthenticated) {
       this.token = this.$auth.getAccessToken();
@@ -49,7 +64,7 @@ export default {
     console.log(this.token);
     axios({
       method: "get",
-      url: "https://egc18xe6uh.execute-api.ap-northeast-2.amazonaws.com/Prod/blogs",
+      url: process.env.VUE_APP_blogsurl,
       headers: {
         // eslint-disable-next-line prettier/prettier
         "Authorization": `Bearer ${this.token}`,

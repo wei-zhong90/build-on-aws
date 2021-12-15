@@ -10,15 +10,6 @@
         :post="post[0].blog"
       />
     </div>
-    <!-- <div class="q-pa-md row flex flex-center q-gutter-md">
-      <q-pagination
-        v-model="current"
-        :max="total_page"
-        :max-pages="total_page > 10 ? 10 : 0"
-        boundary-numbers
-        direction-links
-      ></q-pagination>
-    </div> -->
   </div>
 </template>
 
@@ -32,24 +23,12 @@ export default {
     blogCard,
   },
   props: ["search_text"],
-  data() {
-    return {
-      token: "",
-      current: 1,
-      total_page: 1,
-    };
-  },
   computed: {
     content() {
       return this.$store.state.result;
     },
   },
   mounted() {
-    if (this.authState && this.authState.isAuthenticated) {
-      this.token = this.$auth.getAccessToken();
-    } else {
-      this.$auth.signInWithRedirect({ originalUri: "/" });
-    }
     console.log("this is the content from search vue");
     console.log(this.content);
   },

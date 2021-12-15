@@ -35,8 +35,10 @@
             bg-color="white"
             rounded
             outlined
-            maxlength="12"
+            maxlength="50"
             dense
+            standout
+            @keyup.enter="search_string(text)"
           >
             <template v-slot:append>
               <q-icon
@@ -45,7 +47,11 @@
                 @click="text = ''"
                 class="cursor-pointer"
               ></q-icon>
-              <q-icon name="search" @click="search_string(text)"></q-icon>
+              <q-icon
+                name="search"
+                class="cursor-pointer"
+                @click="search_string(text)"
+              ></q-icon>
             </template>
           </q-input>
           <template v-slot:action>
@@ -160,7 +166,6 @@ export default {
       let id = hit._id;
       let content = this.$store.state.analog.flat();
       let result = content.filter((item) => item._id.$oid == id);
-      console.log(result);
       return result;
     },
     search_string(payload) {
@@ -169,7 +174,7 @@ export default {
       // });
       axios({
         method: "get",
-        url: "https://egc18xe6uh.execute-api.ap-northeast-2.amazonaws.com/Prod/blogs/search",
+        url: process.env.VUE_APP_searchurl,
         headers: {
           // eslint-disable-next-line prettier/prettier
           "Authorization": `Bearer ${this.$auth.getAccessToken()}`,
@@ -192,7 +197,7 @@ export default {
       });
     },
     login() {
-      this.$auth.signInWithRedirect({ originalUri: "/" });
+      this.$auth.signInWithRedirect({ originalUri: "/blogs" });
     },
     async logout() {
       const publicPath = this.$route.href.replace(
