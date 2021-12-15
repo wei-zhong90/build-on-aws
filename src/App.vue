@@ -180,23 +180,6 @@ export default {
       }).then((res) => {
         // console.log(res);
         console.log(res.data);
-        // eslint-disable-next-line no-empty
-        while (this.$store.state.analog === []) {
-          axios({
-            method: "get",
-            url: "https://egc18xe6uh.execute-api.ap-northeast-2.amazonaws.com/Prod/blogs",
-            headers: {
-              // eslint-disable-next-line prettier/prettier
-              "Authorization": `Bearer ${this.token}`,
-            },
-          }).then((res) => {
-            // console.log(res);
-            this.content = res.data;
-            console.log(this.content);
-            this.$store.commit("input_analog", this.content);
-            this.total_page = this.content.length;
-          });
-        }
         console.log("analog content follow");
         console.log(this.$store.state.analog);
         let result = res.data.hits.hits.map(this.searchHitToResult);
