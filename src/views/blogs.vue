@@ -1,5 +1,5 @@
 <template>
-  <div class="allblogs">
+  <div class="blogs">
     <div class="q-pa-md row flex q-gutter-md">
       <blog-card
         v-for="(post, index) in content[current - 1]"
@@ -28,7 +28,7 @@ import blogCard from "@/components/blogCard.vue";
 const axios = require("axios");
 
 export default {
-  name: "allblogs",
+  name: "blogs",
   components: {
     blogCard,
   },
