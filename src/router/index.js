@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { LoginCallback, navigationGuard } from "@okta/okta-vue";
 import Home from "../views/Home.vue";
+import search from "../views/search.vue";
 
 const routes = [
   {
@@ -9,18 +10,17 @@ const routes = [
     component: Home,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
+    path: "/blogs",
+    name: "Blogs",
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import(/* webpackChunkName: "blogs" */ "../views/blogs.vue"),
   },
   {
     path: "/login/callback",
     component: LoginCallback,
   },
+  { path: "/blogs/search", component: search },
 ];
 
 const router = createRouter({

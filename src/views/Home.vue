@@ -1,19 +1,21 @@
 <template>
   <div class="home">
-    <q-page class="flex flex-center">
-      <blogCard msg="Welcome to Your Vue.js App" />
-    </q-page>
+    <div class="q-pa-md row items-start q-gutter-md">
+      <img
+        alt="Quasar logo"
+        src="../assets/logo.svg"
+        style="width: 200px; height: 200px"
+        v-if="authState && authState.isAuthenticated"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import blogCard from "@/components/blogCard.vue";
-
 export default {
   name: "Home",
-  components: {
-    blogCard,
+  mounted() {
+    console.log(this.$auth.getAccessToken());
   },
 };
 </script>

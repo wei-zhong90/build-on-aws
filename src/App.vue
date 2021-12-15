@@ -23,19 +23,52 @@
             Builder's Creed
           </router-link>
         </q-toolbar-title>
-
-        <q-btn
-          label="Login"
-          v-if="authState && !authState.isAuthenticated"
-          color="primary"
-          @click="login()"
-        ></q-btn>
-        <q-btn
-          label="Logout"
-          color="primary"
-          @click="logout()"
-          v-if="authState && authState.isAuthenticated"
-        ></q-btn>
+        <q-banner
+          rounded
+          dense
+          inline-actions
+          class="glossy bg-primary text-white"
+        >
+          <q-input
+            v-if="authState && authState.isAuthenticated"
+            v-model="text"
+            bg-color="white"
+            rounded
+            outlined
+            maxlength="12"
+            dense
+          >
+            <template v-slot:append>
+              <q-icon
+                v-if="text !== ''"
+                name="close"
+                @click="text = ''"
+                class="cursor-pointer"
+              ></q-icon>
+              <q-icon name="search" @click="search_string(text)"></q-icon>
+            </template>
+          </q-input>
+          <template v-slot:action>
+            <q-btn
+              flat
+              label="Blogs"
+              v-if="authState && authState.isAuthenticated"
+              @click="$router.push({ path: '/blogs' })"
+            ></q-btn>
+            <q-btn
+              flat
+              label="Login"
+              v-if="authState && !authState.isAuthenticated"
+              @click="login()"
+            ></q-btn>
+            <q-btn
+              flat
+              label="Logout"
+              @click="logout()"
+              v-if="authState && authState.isAuthenticated"
+            ></q-btn>
+          </template>
+        </q-banner>
       </q-toolbar>
     </q-header>
 
@@ -118,11 +151,63 @@
 
 <script>
 import { ref } from "vue";
+const axios = require("axios");
 
 export default {
   name: "LayoutDefault",
-
   methods: {
+    searchHitToResult(hit) {
+      let id = hit._id;
+      let content = this.$store.state.analog.flat();
+      let result = content.filter((item) => item._id.$oid == id);
+      console.log(result);
+      return result;
+    },
+    search_string(payload) {
+      // this.$router.push({
+      //   path: "/blogs/",
+      // });
+      axios({
+        method: "get",
+        url: "https://egc18xe6uh.execute-api.ap-northeast-2.amazonaws.com/Prod/blogs/search",
+        headers: {
+          // eslint-disable-next-line prettier/prettier
+          "Authorization": `Bearer ${this.$auth.getAccessToken()}`,
+        },
+        params: {
+          search_string: payload,
+        },
+      }).then((res) => {
+        // console.log(res);
+        console.log(res.data);
+        // eslint-disable-next-line no-empty
+        while (this.$store.state.analog === []) {
+          axios({
+            method: "get",
+            url: "https://egc18xe6uh.execute-api.ap-northeast-2.amazonaws.com/Prod/blogs",
+            headers: {
+              // eslint-disable-next-line prettier/prettier
+              "Authorization": `Bearer ${this.token}`,
+            },
+          }).then((res) => {
+            // console.log(res);
+            this.content = res.data;
+            console.log(this.content);
+            this.$store.commit("input_analog", this.content);
+            this.total_page = this.content.length;
+          });
+        }
+        console.log("analog content follow");
+        console.log(this.$store.state.analog);
+        let result = res.data.hits.hits.map(this.searchHitToResult);
+        this.$store.commit("input_result", result);
+        console.log("the store result follows");
+        console.log(this.$store.state.result);
+      });
+      this.$router.push({
+        path: "/blogs/search",
+      });
+    },
     login() {
       this.$auth.signInWithRedirect({ originalUri: "/" });
     },
@@ -139,7 +224,7 @@ export default {
   setup() {
     return {
       leftDrawerOpen: ref(false),
-      token: ref(""),
+      text: ref(""),
     };
   },
 };
